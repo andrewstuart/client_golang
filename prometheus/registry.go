@@ -114,12 +114,32 @@ func Register(m Collector) error {
 	return err
 }
 
+// RegisterAll works like Register but takes a variadic list of Collectors.
+func RegisterAll(m ...Collector) error {
+	for i := range m {
+		if err := Register(m[i]); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // MustRegister works like Register but panics where Register would have
 // returned an error.
 func MustRegister(m Collector) {
 	err := Register(m)
 	if err != nil {
 		panic(err)
+	}
+}
+
+// MustRegisterAll works like MustRegister but takes a variadic list of
+// Collectors.
+func MustRegisterAll(m ...Collector) {
+	for i := range m {
+		if err := Register(m[i]); err != nil {
+			panic(err)
+		}
 	}
 }
 
